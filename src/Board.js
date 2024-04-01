@@ -20,6 +20,32 @@ export default class Board extends React.Component {
       inProgress: React.createRef(),
       complete: React.createRef(),
     }
+    this.drake = null;
+  }
+  componentDidMount() {
+    
+    this.drake = Dragula(
+      Object.values(this.swimlanes).map(ref => ref.current),
+      {
+        // Optional
+      }
+    );
+
+    // Optional: Handle drag-and-drop events
+    this.drake.on('drop', (el, target, source, sibling) => {
+      // Remove existing color classes
+      el.classList.remove('Card-grey', 'Card-blue', 'Card-green');
+    
+      // Add the new color class based on the target swimlane
+      if (target === this.swimlanes.backlog.current) {
+        el.classList.add('Card-grey');
+      } else if (target === this.swimlanes.inProgress.current) {
+        el.classList.add('Card-blue');
+      } else if (target === this.swimlanes.complete.current) {
+        el.classList.add('Card-green');
+      }
+    });
+    
   }
   getClients() {
     return [
